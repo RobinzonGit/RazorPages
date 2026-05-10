@@ -25,7 +25,8 @@ namespace ContosoUniversity.Pages.Enrollments
         {
             Enrollment = await _context.Enrollments
                 .Include(e => e.Course)
-                .Include(e => e.Student).ToListAsync();
+                .Include(e => e.Student)
+                .ToListAsync();
         }
     }
 }
