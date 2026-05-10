@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 
-namespace ContosoUniversity.Pages.Students
+namespace ContosoUniversity.Pages.Enrollments
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace ContosoUniversity.Pages.Students
         }
 
         [BindProperty]
-        public Models.Student Student { get; set; } = default!;
+        public Enrollment Enrollment { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,12 +30,14 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-            var student =  await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
+            var enrollment =  await _context.Enrollments.FirstOrDefaultAsync(m => m.EnrollmentID == id);
+            if (enrollment == null)
             {
                 return NotFound();
             }
-            Student = student;
+            Enrollment = enrollment;
+           ViewData["CourseID"] = new SelectList(_context.Courses, "Id", "Id");
+           ViewData["StudentID"] = new SelectList(_context.Students, "Id", "Id");
             return Page();
         }
 
@@ -48,7 +50,7 @@ namespace ContosoUniversity.Pages.Students
                 return Page();
             }
 
-            _context.Attach(Student).State = EntityState.Modified;
+            _context.Attach(Enrollment).State = EntityState.Modified;
 
             try
             {
@@ -56,7 +58,7 @@ namespace ContosoUniversity.Pages.Students
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(Student.Id))
+                if (!EnrollmentExists(Enrollment.EnrollmentID))
                 {
                     return NotFound();
                 }
@@ -69,9 +71,9 @@ namespace ContosoUniversity.Pages.Students
             return RedirectToPage("./Index");
         }
 
-        private bool StudentExists(int id)
+        private bool EnrollmentExists(int id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            return _context.Enrollments.Any(e => e.EnrollmentID == id);
         }
     }
 }

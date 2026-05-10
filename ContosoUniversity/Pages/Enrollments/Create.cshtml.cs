@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 
-namespace ContosoUniversity.Pages.Students
+namespace ContosoUniversity.Pages.Enrollments
 {
     public class CreateModel : PageModel
     {
@@ -21,11 +21,13 @@ namespace ContosoUniversity.Pages.Students
 
         public IActionResult OnGet()
         {
+        ViewData["CourseID"] = new SelectList(_context.Courses, "Id", "Id");
+        ViewData["StudentID"] = new SelectList(_context.Students, "Id", "Id");
             return Page();
         }
 
         [BindProperty]
-        public Models.Student Student { get; set; } = default!;
+        public Enrollment Enrollment { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -35,7 +37,7 @@ namespace ContosoUniversity.Pages.Students
                 return Page();
             }
 
-            _context.Students.Add(Student);
+            _context.Enrollments.Add(Enrollment);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

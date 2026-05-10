@@ -18,6 +18,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+using (IServiceScope scope = app.Services.CreateScope())
+{
+
+    IServiceProvider provider  = scope.ServiceProvider;
+    ContosoUniversityContext context = provider.GetRequiredService<ContosoUniversityContext>();
+    context.Database.EnsureCreated ();
+    DbInitializer.Initialize(context);
+
+
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
