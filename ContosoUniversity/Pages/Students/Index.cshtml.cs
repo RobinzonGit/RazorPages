@@ -20,17 +20,22 @@ namespace ContosoUniversity.Pages.Students
         }
         public string NameSort { get; set; }
         public string DateSort { get; set; }
-        public string CorentFilter { get; set; }
-        public string CorentSort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurentSort { get; set; }
 
         public IList<Models.Student> Students { get;set; } = default!;
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             DateSort = sortOrder == "Date" ? "date_desc" : "Date";
+            CurrentFilter = searchString; 
 
-            IQueryable<Models.Student> students = from s in _context.Students select s;
+            IQueryable<Student> students = from s in _context.Students select s;
+            if (!String.IsNullOrEmpty(searchString))
+                students =
+                    students
+                    .Where(s => s.LastName.Contains(searchString) || s.FirstName.Contains(searchString));
             switch (sortOrder)
             {
                 case "name_desc": students = students.OrderByDescending(s => s.LastName); break;
