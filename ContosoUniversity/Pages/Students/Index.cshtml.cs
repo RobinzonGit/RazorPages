@@ -18,12 +18,27 @@ namespace ContosoUniversity.Pages.Students
         {
             _context = context;
         }
+        public string NameSort { get; set; }
+        public string DateSort { get; set; }
+        public string CorentFilter { get; set; }
+        public string CorentSort { get; set; }
 
-        public IList<Models.Student> Student { get;set; } = default!;
+        public IList<Models.Student> Students { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder)
         {
-            Student = await _context.Students.ToListAsync();
+            NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            DateSort = sortOrder == "Date" ? "date_desc" : "Date";
+
+            IQueryable<Models.Student> students = from s in _context.Students select s;
+            switch (sortOrder)
+            {
+                case "name_desc": students = students.OrderByDescending(s => s.LastName); break;
+                case "date_desc": students = students.OrderByDescending(s => s.EnrollmentDate); break;
+                case "Date": students = students.OrderBy(s => s.EnrollmentDate); break;
+                default: students = students.OrderBy(_ => _.LastName); break;
+            }
+            this.Students = await students. AsNoTracking().ToListAsync();
         }
     }
 }
