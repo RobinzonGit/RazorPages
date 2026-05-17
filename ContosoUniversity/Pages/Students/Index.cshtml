@@ -10,7 +10,7 @@
         <h1>Studens</h1>
 
         <div class="create-button">
-            <a asp-page="Create" class="btn-primary">Create New</a>
+            <a asp-page="Create" class="btn btn-primary">Create New</a>
         </div>
     </div>
     <form asp-page="./Index" method="get">
@@ -26,19 +26,19 @@
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">@Html.DisplayNameFor(model => model.Students[0].LastName)</a>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">@Html.DisplayNameFor(model => model.PLStudents[0].LastName)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Students[0].FirstName)
+                @Html.DisplayNameFor(model => model.PLStudents[0].FirstName)
             </th>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort">@Html.DisplayNameFor(model => model.Students[0].EnrollmentDate)</a>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort">@Html.DisplayNameFor(model => model.PLStudents[0].EnrollmentDate)</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Students) {
+@foreach (var item in Model.PLStudents) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.LastName)
@@ -58,3 +58,71 @@
 }
     </tbody>
 </table>
+
+@{
+    string prevDisabled = Model.PLStudents.HasPrevlousPage ? "" : "disabled";
+    string nextDisabled = Model.PLStudents.HasNextPage ? "" : "disabled";
+}
+
+<a asp-page="./Index"
+ asp-route-sortorder="@Model.CurrentSort"
+ asp-route-pageIndex="@(Model.PLStudents.PageIndex -1)"
+ aasp-asp-asp-route-currentFilter="@Model.CurrentFilter"
+ class="btn btn-primary @prevDisabled"
+>
+Prev
+</a>
+
+<a asp-page="./Index"
+       asp-route-sortorder="@Model.CurrentSort"
+       asp-route-pageIndex="@(Model.PLStudents.PageIndex + 1)"
+       aasp-asp-asp-route-currentFilter="@Model.CurrentFilter"
+       class="btn btn-primary @nextDisabled">
+    Next
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
