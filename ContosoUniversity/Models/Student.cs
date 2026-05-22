@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using System.Collections.Generic;
+
 namespace ContosoUniversity.Models
 {
     public class Student
@@ -7,12 +9,11 @@ namespace ContosoUniversity.Models
         public int Id { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
-        public DateTime EnrollmentDate { get; set; }
-        // Calculated propetes
-        public string FullName { get => $"{LastName} {FirstName}"; }    
+        public System.DateTime EnrollmentDate { get; set; }
 
-        public ICollection<Enrollment> Enrollment { get; set; }
+        public ICollection<Enrollment> Enrollments { get; set; }
 
-
+        // Добавьте это свойство
+        public string FullName => $"{LastName} {FirstName}";
     }
 }

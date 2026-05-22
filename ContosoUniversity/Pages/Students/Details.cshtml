@@ -30,23 +30,25 @@
             @Html.DisplayFor(model => model.Student.EnrollmentDate)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Student.Enrollment)
+            @Html.DisplayNameFor(model => model.Student.Enrollments)   <!-- исправлено -->
         </dt>
         <dd class="col-sm-4">
             <table class="table">
-                <tr>
-                    <th>Course title</th>
-                    <th>Grade</th>
-                </tr>
-                @foreach (ContosoUniversity.Models.Enrollment enrollment in Model.Student.Enrollment)
-                {
+                <thead>
                     <tr>
-                        <td>
-                            @Html.DisplayFor(e => enrollment.Course.Title) </td>
-                          <td>  @Html.DisplayFor(e => enrollment.Grade) </td>
+                        <th>Course title</th>
+                        <th>Grade</th>
                     </tr>
-                }
-
+                </thead>
+                <tbody>
+                    @foreach (var enrollment in Model.Student.Enrollments)   
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(e => enrollment.Course.Title)</td>
+                            <td>@Html.DisplayFor(e => enrollment.Grade)</td>
+                        </tr>
+                    }
+                </tbody>
             </table>
         </dd>
     </dl>

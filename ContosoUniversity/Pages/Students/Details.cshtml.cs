@@ -29,7 +29,7 @@ namespace ContosoUniversity.Pages.Students
             }
 
             var student = await _context.Students
-                .Include(s => s.Enrollment) 
+                .Include(s => s.Enrollments) 
                 .ThenInclude(e => e.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (student == null)

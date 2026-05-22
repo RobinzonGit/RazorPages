@@ -1,39 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ContosoUniversity.Data;
+using ContosoUniversity.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ContosoUniversity.Data;
-using ContosoUniversity.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace ContosoUniversity.Pages.Enrollments
 {
     public class CreateModel : PageModel
     {
-        private readonly ContosoUniversity.Data.ContosoUniversityContext _context;
+        private readonly ContosoUniversityContext _context;
 
-        public CreateModel(ContosoUniversity.Data.ContosoUniversityContext context)
+        public CreateModel(ContosoUniversityContext context)
         {
             _context = context;
-        }
-
-        public IActionResult OnGet()
-        {
-            ViewData["CourseID"] = new SelectList(_context.Courses, "Id", "Title");
-            ViewData["StudentID"] = new SelectList(_context.Students, "Id", "FullName");
-            return Page();
         }
 
         [BindProperty]
         public Enrollment Enrollment { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+        public async Task<IActionResult> OnGetAsync()
+        {
+            // Используем правильное имя свойства CourseID и FullName (должно быть в Student)
+            ViewData["CourseID"] = new SelectList(await _context.Courses.ToListAsync(), "CourseID", "Title");
+            ViewData["StudentID"] = new SelectList(await _context.Students.ToListAsync(), "Id", "FullName");
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                // Повторно заполняем ViewBag при ошибке
+                ViewData["CourseID"] = new SelectList(await _context.Courses.ToListAsync(), "CourseID", "Title", Enrollment.CourseID);
+                ViewData["StudentID"] = new SelectList(await _context.Students.ToListAsync(), "Id", "FullName", Enrollment.StudentID);
                 return Page();
             }
 

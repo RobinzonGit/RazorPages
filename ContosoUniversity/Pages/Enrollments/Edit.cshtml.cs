@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +12,9 @@ namespace ContosoUniversity.Pages.Enrollments
 {
     public class EditModel : PageModel
     {
-        private readonly ContosoUniversity.Data.ContosoUniversityContext _context;
+        private readonly ContosoUniversityContext _context;
 
-        public EditModel(ContosoUniversity.Data.ContosoUniversityContext context)
+        public EditModel(ContosoUniversityContext context)
         {
             _context = context;
         }
@@ -25,28 +24,25 @@ namespace ContosoUniversity.Pages.Enrollments
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var enrollment =  await _context.Enrollments.FirstOrDefaultAsync(m => m.EnrollmentID == id);
-            if (enrollment == null)
-            {
-                return NotFound();
-            }
+            var enrollment = await _context.Enrollments.FirstOrDefaultAsync(m => m.EnrollmentID == id);
+            if (enrollment == null) return NotFound();
+
             Enrollment = enrollment;
-            ViewData["CourseID"] = new SelectList(_context.Courses, "Id", "Title");
-            ViewData["StudentID"] = new SelectList(_context.Students, "Id", "FullName");
+
+            // Исправлено: CourseID вместо Id
+            ViewData["CourseID"] = new SelectList(await _context.Courses.ToListAsync(), "CourseID", "Title", Enrollment.CourseID);
+            ViewData["StudentID"] = new SelectList(await _context.Students.ToListAsync(), "Id", "FullName", Enrollment.StudentID);
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                ViewData["CourseID"] = new SelectList(await _context.Courses.ToListAsync(), "CourseID", "Title", Enrollment.CourseID);
+                ViewData["StudentID"] = new SelectList(await _context.Students.ToListAsync(), "Id", "FullName", Enrollment.StudentID);
                 return Page();
             }
 
