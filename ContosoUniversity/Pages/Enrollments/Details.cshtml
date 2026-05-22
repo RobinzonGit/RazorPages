@@ -21,13 +21,14 @@
             @Html.DisplayNameFor(model => model.Enrollment.Course)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Enrollment.Course.CourseID)
+            @Html.DisplayFor(model => model.Enrollment.Course.Title)   <!-- название курса -->
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Enrollment.Student)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Enrollment.Student.Id)
+            @(Model.Enrollment.Student?.FullName ??
+              $"{Model.Enrollment.Student?.LastName} {Model.Enrollment.Student?.FirstName}")
         </dd>
     </dl>
 </div>
