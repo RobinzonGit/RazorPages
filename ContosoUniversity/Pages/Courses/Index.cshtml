@@ -5,38 +5,88 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="~/Pages/Courses/Index.cshtml.css" />
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<div class="index-tools">
+    <div class="index-left-side">
+        <h1>Courses</h1>
+        <div class="create-button">
+            <a asp-page="Create" class="btn btn-primary">Create New</a>
+        </div>
+    </div>
+    <form asp-page="./Index" method="get" id="searchForm">
+        <div>
+            <label for="SearchString">Поиск по названию:</label>
+            <input type="text" name="SearchString" id="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+            <a asp-page="./Index">Сбросить</a>
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="pageSizeSelect">Записей на странице:</label>
+            <select id="pageSizeSelect" name="pageSize" asp-for="PageSize" onchange="this.form.submit()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
+        <input type="hidden" name="searchString" value="@Model.CurrentFilter" />
+        <input type="hidden" name="pageIndex" value="1" />
+    </form>
+</div>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].Title)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.TitleSort" asp-route-pageSize="@Model.PageSize">
+                    @Html.DisplayNameFor(model => model.Courses[0].Title)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].Credits)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.CreditsSort" asp-route-pageSize="@Model.PageSize">
+                    @Html.DisplayNameFor(model => model.Courses[0].Credits)
+                </a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Course) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Credits)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.CourseID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.CourseID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.CourseID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Courses)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.Credits)</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.CourseID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.CourseID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.CourseID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    string prevDisabled = Model.Courses.HasPreviousPage ? "" : "disabled";
+    string nextDisabled = Model.Courses.HasNextPage ? "" : "disabled";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Courses.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   asp-route-pageSize="@Model.PageSize"
+   class="btn btn-primary @prevDisabled">
+    Prev
+</a>
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Courses.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   asp-route-pageSize="@Model.PageSize"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

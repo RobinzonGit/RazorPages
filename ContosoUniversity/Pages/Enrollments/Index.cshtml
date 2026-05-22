@@ -5,44 +5,96 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<!-- Подключаем CSS-стили (создадим позже) -->
+<link rel="stylesheet" href="~/Pages/Enrollments/Index.cshtml.css" />
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<div class="index-tools">
+    <div class="index-left-side">
+        <h1>Enrollments</h1>
+        <div class="create-button">
+            <a asp-page="Create" class="btn btn-primary">Create New</a>
+        </div>
+    </div>
+    <form asp-page="./Index" method="get" id="searchForm">
+        <div>
+            <label for="SearchString">Поиск по студенту:</label>
+            <input type="text" name="SearchString" id="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+            <a asp-page="./Index">Сбросить</a>
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="pageSizeSelect">Записей на странице:</label>
+            <select id="pageSizeSelect" name="pageSize" asp-for="PageSize" onchange="this.form.submit()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <!-- Скрытые поля, чтобы сохранить сортировку и поиск при смене pageSize -->
+        <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
+        <input type="hidden" name="searchString" value="@Model.CurrentFilter" />
+        <input type="hidden" name="pageIndex" value="1" />
+    </form>
+</div>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Grade)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.GradeSort" asp-route-pageSize="@Model.PageSize">
+                    @Html.DisplayNameFor(model => model.Enrollments[0].Grade)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Course)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.CourseSort" asp-route-pageSize="@Model.PageSize">
+                    @Html.DisplayNameFor(model => model.Enrollments[0].Course)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Student)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.StudentSort" asp-route-pageSize="@Model.PageSize">
+                    @Html.DisplayNameFor(model => model.Enrollments[0].Student)
+                </a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Enrollment) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Grade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Course.Title)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Student.FullName)
-</td>
+        @foreach (var item in Model.Enrollments)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Grade)</td>
+                <td>@Html.DisplayFor(modelItem => item.Course.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.Student.FullName)</td>
                 <td>
-                <a asp-page="./Edit" asp-route-id="@item.EnrollmentID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.EnrollmentID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.EnrollmentID">Delete</a>
-            </td>
-        </tr>
-}
+                    <a asp-page="./Edit" asp-route-id="@item.EnrollmentID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.EnrollmentID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.EnrollmentID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    string prevDisabled = Model.Enrollments.HasPreviousPage ? "" : "disabled";
+    string nextDisabled = Model.Enrollments.HasNextPage ? "" : "disabled";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Enrollments.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   asp-route-pageSize="@Model.PageSize"
+   class="btn btn-primary @prevDisabled">
+    Prev
+</a>
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Enrollments.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   asp-route-pageSize="@Model.PageSize"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

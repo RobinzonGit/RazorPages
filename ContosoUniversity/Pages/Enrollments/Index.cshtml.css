@@ -1,0 +1,30 @@
+﻿.index-tools, .index-left-side {
+    display: flex;
+    align-items: center;
+}
+
+.index-tools {
+    justify-content: space-between;
+}
+
+.create-button {
+    margin: 0 16px;
+}
+
+/* Дополнительные стили для формы поиска и выбора размера страницы */
+#searchForm {
+    margin-bottom: 20px;
+}
+
+    #searchForm div {
+        margin-bottom: 8px;
+    }
+
+    #searchForm label {
+        margin-right: 8px;
+    }
+
+#pageSizeSelect {
+    margin-left: 5px;
+    padding: 4px;
+}

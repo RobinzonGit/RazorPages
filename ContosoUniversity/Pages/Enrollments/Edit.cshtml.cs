@@ -36,8 +36,8 @@ namespace ContosoUniversity.Pages.Enrollments
                 return NotFound();
             }
             Enrollment = enrollment;
-           ViewData["CourseID"] = new SelectList(_context.Courses, "Id", "Id");
-           ViewData["StudentID"] = new SelectList(_context.Students, "Id", "Id");
+            ViewData["CourseID"] = new SelectList(_context.Courses, "Id", "Title");
+            ViewData["StudentID"] = new SelectList(_context.Students, "Id", "FullName");
             return Page();
         }
 
