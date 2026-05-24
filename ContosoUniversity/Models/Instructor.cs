@@ -29,7 +29,7 @@ namespace ContosoUniversity.Models
         //Novigation properties
         public OfficeAssignment OfficeAssignment { get; set; }
 
-        public ICollection<Course> Course { get; set; }
+        public ICollection<Course> Courses { get; set; }
 
 
         
