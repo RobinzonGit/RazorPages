@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="BlazorAcademyHWApp/BlazorAcademyHWApp.csproj" Id="9768a48f-81e9-472e-9a10-1bc6bad20496" />
   <Project Path="ContosoUniversity/ContosoUniversity.csproj" />
 </Solution>
