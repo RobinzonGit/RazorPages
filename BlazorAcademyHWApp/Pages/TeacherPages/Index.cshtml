@@ -1,54 +1,58 @@
 @page
 @model BlazorAcademyHWApp.Pages.TeacherPages.IndexModel
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h1>Преподаватели</h1>
 
-<h1>Index</h1>
+<form method="get">
+    <div class="form-group">
+        <label for="sortOrder">Сортировка:</label>
+        <select name="sortOrder" class="form-control" asp-for="CurrentSort" onchange="this.form.submit()">
+            <option value="id_asc">ID (возр.)</option>
+            <option value="id_desc">ID (убыв.)</option>
+            <option value="last_asc">Фамилия (А-Я)</option>
+            <option value="last_desc">Фамилия (Я-А)</option>
+            <option value="first_asc">Имя (А-Я)</option>
+            <option value="first_desc">Имя (Я-А)</option>
+            <option value="email_asc">Email (А-Я)</option>
+            <option value="email_desc">Email (Я-А)</option>
+        </select>
+    </div>
+</form>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher[0].FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher[0].LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher[0].Phone)
-            </th>
-            <th></th>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Email</th>
+            <th>Телефон</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Teacher) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Phone)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var teacher in Model.Teachers)
+        {
+            <tr>
+                <td>@teacher.Id</td>
+                <td>@teacher.FirstName</td>
+                <td>@teacher.LastName</td>
+                <td>@(teacher.Email ?? "—")</td>
+                <td>@(teacher.Phone ?? "—")</td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.CurrentSort">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

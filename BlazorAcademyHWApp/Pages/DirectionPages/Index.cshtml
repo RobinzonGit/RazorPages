@@ -1,48 +1,56 @@
 @page
 @model BlazorAcademyHWApp.Pages.DirectionPages.IndexModel
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h1>Направления подготовки</h1>
 
-<h1>Index</h1>
+<form method="get">
+    <div class="form-group">
+        <label for="sortOrder">Сортировка:</label>
+        <select name="sortOrder" class="form-control" asp-for="CurrentSort" onchange="this.form.submit()">
+            <option value="id_asc">ID (возр.)</option>
+            <option value="id_desc">ID (убыв.)</option>
+            <option value="name_asc">Название (А-Я)</option>
+            <option value="name_desc">Название (Я-А)</option>
+            <option value="code_asc">Код (А-Я)</option>
+            <option value="code_desc">Код (Я-А)</option>
+            <option value="duration_asc">Длительность (возр.)</option>
+            <option value="duration_desc">Длительность (убыв.)</option>
+        </select>
+    </div>
+</form>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Direction[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direction[0].Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direction[0].DurationYears)
-            </th>
-            <th></th>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Код</th>
+            <th>Длительность (лет)</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Direction) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Code)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DurationYears)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var direction in Model.Directions)
+        {
+            <tr>
+                <td>@direction.Id</td>
+                <td>@direction.Name</td>
+                <td>@(direction.Code ?? "—")</td>
+                <td>@(direction.DurationYears?.ToString() ?? "—")</td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.CurrentSort">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

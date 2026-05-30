@@ -1,54 +1,56 @@
 @page
 @model BlazorAcademyHWApp.Pages.DisciplinePages.IndexModel
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h1>Дисциплины</h1>
 
-<h1>Index</h1>
+<form method="get">
+    <div class="form-group">
+        <label for="sortOrder">Сортировка:</label>
+        <select name="sortOrder" class="form-control" asp-for="CurrentSort" onchange="this.form.submit()">
+            <option value="id_asc">ID (возр.)</option>
+            <option value="id_desc">ID (убыв.)</option>
+            <option value="name_asc">Название (А-Я)</option>
+            <option value="name_desc">Название (Я-А)</option>
+            <option value="teacher_asc">Преподаватель (А-Я)</option>
+            <option value="teacher_desc">Преподаватель (Я-А)</option>
+            <option value="credits_asc">Кредиты (возр.)</option>
+            <option value="credits_desc">Кредиты (убыв.)</option>
+        </select>
+    </div>
+</form>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Discipline[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discipline[0].TeacherId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discipline[0].Teacher)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discipline[0].Credits)
-            </th>
-            <th></th>
+            <th>ID</th>
+            <th>Название дисциплины</th>
+            <th>Преподаватель</th>
+            <th>Кредиты</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Discipline) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TeacherId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Teacher)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Credits)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var discipline in Model.Disciplines)
+        {
+            <tr>
+                <td>@discipline.Id</td>
+                <td>@discipline.Name</td>
+                <td>@(discipline.Teacher != null ? $"{discipline.Teacher.LastName} {discipline.Teacher.FirstName}" : "—")</td>
+                <td>@(discipline.Credits?.ToString() ?? "—")</td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.CurrentSort">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
