@@ -1,0 +1,57 @@
+@page
+@model BlazorAcademyHWApp.Pages.GroupPages.IndexModel
+
+<h1>Группы</h1>
+
+<form method="get">
+    <div class="form-group">
+        <label for="sortOrder">Сортировка:</label>
+        <select name="sortOrder" class="form-control" asp-for="CurrentSort" onchange="this.form.submit()">
+            <option value="id_asc">ID (возр.)</option>
+            <option value="id_desc">ID (убыв.)</option>
+            <option value="name_asc">Название (А-Я)</option>
+            <option value="name_desc">Название (Я-А)</option>
+            <option value="dir_asc">Направление (А-Я)</option>
+            <option value="dir_desc">Направление (Я-А)</option>
+            <option value="year_asc">Год обучения (возр.)</option>
+            <option value="year_desc">Год обучения (убыв.)</option>
+        </select>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название группы</th>
+            <th>Направление</th>
+            <th>Год обучения</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in Model.Groups)
+        {
+            <tr>
+                <td>@group.Id</td>
+                <td>@group.Name</td>
+                <td>@(group.Direction?.Name ?? "—")</td>
+                <td>@(group.YearOfStudy?.ToString() ?? "—")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Пагинация -->
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.CurrentSort">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

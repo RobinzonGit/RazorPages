@@ -1,0 +1,61 @@
+@page
+@model BlazorAcademyHWApp.Pages.StudentPages.IndexModel
+
+<h1>Студенты</h1>
+
+<form method="get">
+    <div class="form-group">
+        <label for="sortOrder">Сортировка:</label>
+        <select name="sortOrder" class="form-control" asp-for="CurrentSort" onchange="this.form.submit()">
+            <option value="name_asc">Имя (А-Я)</option>
+            <option value="name_desc">Имя (Я-А)</option>
+            <option value="last_asc">Фамилия (А-Я)</option>
+            <option value="last_desc">Фамилия (Я-А)</option>
+            <option value="group_asc">Группа (по возрастанию)</option>
+            <option value="group_desc">Группа (по убыванию)</option>
+            <option value="id_asc">ID (возр.)</option>
+            <option value="id_desc">ID (убыв.)</option>
+        </select>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Группа</th>
+            <th>Дата рождения</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model.Students)
+        {
+            <tr>
+                <td>@student.Id</td>
+                <td>@student.FirstName</td>
+                <td>@student.LastName</td>
+                <td>@(student.Group?.Name ?? "—")</td>
+                <td>@(student.DateOfBirth?.ToShortDateString() ?? "—")</td>
+                <td>@student.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Пагинация -->
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.CurrentSort">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
