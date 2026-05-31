@@ -1,0 +1,60 @@
+@page
+@model UniversityApp.Pages.Students.IndexModel
+
+<h1>Студенты</h1>
+
+<form method="get">
+    <div class="form-group">
+        <label for="sortOrder">Сортировка:</label>
+        <select name="sortOrder" class="form-control" asp-for="CurrentSort" onchange="this.form.submit()">
+            <option value="id_asc">ID (возр.)</option>
+            <option value="id_desc">ID (убыв.)</option>
+            <option value="last_asc">Фамилия (А-Я)</option>
+            <option value="last_desc">Фамилия (Я-А)</option>
+            <option value="first_asc">Имя (А-Я)</option>
+            <option value="first_desc">Имя (Я-А)</option>
+            <option value="group_asc">Группа (А-Я)</option>
+            <option value="group_desc">Группа (Я-А)</option>
+        </select>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Группа</th>
+            <th>Дата рождения</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model.Students)
+        {
+            <tr>
+                <td>@s.Id</td>
+                <td>@s.FirstName</td>
+                <td>@s.LastName</td>
+                <td>@(s.Group?.Name ?? "—")</td>
+                <td>@(s.DateOfBirth?.ToShortDateString() ?? "—")</td>
+                <td>@s.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.CurrentSort">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
